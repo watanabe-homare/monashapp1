@@ -1,1 +1,45 @@
+# Android build
 /build
+**/build
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Gradle cache and logs
+.gradle
+.gradle/**
+
+# IDE files
+.idea/
+*.iml
+
+# Keystore files (if any, for signing apps)
+*.jks
+
+# Log files
+*.log
+
+# Generated files
+captures/
+output.json
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Kotlin/Java/Jetpack Compose related
+*.class
+*.kt~*
+*.swp
+
+# Android Studio Navigation Editor temp files
+.navigation/
+
+# Crashlytics/analytics files (if used)
+fabric.properties
+crashlytics-build.properties
+
+# Others (optional, for JetBrains IDEs)
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
