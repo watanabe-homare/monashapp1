@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">monashapp1</string>
     <string name="title_activity_loginscreen">loginscreen</string>
+    <string name="title_activity_questionnaire">Questionnaire</string>
 </resources>

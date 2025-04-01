@@ -63,8 +63,6 @@ fun WelcomeScreeen(modifier: Modifier = Modifier) {
         }
         pop()
     }
-
-
 //    Column layout for the welcome screen
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp),
@@ -84,7 +82,6 @@ fun WelcomeScreeen(modifier: Modifier = Modifier) {
          * Space
          * Text - Designed by Homare Watanabe (35281375)
          */
-//        Spacer(modifier = Modifier.height(32.dp)) check if necessary later
 
         Text(
             text = "NutriTrack",
