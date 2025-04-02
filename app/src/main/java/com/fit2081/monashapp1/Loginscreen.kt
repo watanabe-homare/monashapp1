@@ -1,5 +1,7 @@
 package com.fit2081.monashapp1
 
+//For smooth navigation set phoneNumber val should be modified after
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -128,7 +130,8 @@ fun DropdownFromCSV(context: Context, fileName: String, columnIndex: Int) {
 fun LoginscreenContent(modifier: Modifier = Modifier) {
 //    values
     val context = LocalContext.current
-    var phoneNumber by remember { mutableStateOf("") }
+//    var phoneNumber by remember { mutableStateOf("") }
+    val phoneNumber = "61436567330"
     val validPhoneNumberList = getColumnFromCSV(context, "sample.csv", 0)
 
 // Column layout for the LoginscreenContent
@@ -160,16 +163,16 @@ fun LoginscreenContent(modifier: Modifier = Modifier) {
 
         DropdownFromCSV(context, "sample.csv", 1)
 
-        // Text field for entering the location.
-        TextField(
-            value = phoneNumber,
-            // Update phone number when the text changes.
-            onValueChange = { phoneNumber = it },
-            label = { Text("Enter your number") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
+//        // Text field for entering the location.
+//        TextField(
+//            value = phoneNumber,
+//            // Update phone number when the text changes.
+//            onValueChange = { phoneNumber = it },
+//            label = { Text("Enter your number") },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(bottom = 16.dp)
+//        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

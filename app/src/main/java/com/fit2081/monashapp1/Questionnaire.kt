@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
@@ -23,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fit2081.monashapp1.ui.theme.Monashapp1Theme
@@ -34,8 +34,8 @@ class Questionnaire : ComponentActivity() {
         setContent {
             Monashapp1Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android", modifier = Modifier.padding(innerPadding)
+                    QuestionnaireContent(
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
@@ -65,7 +65,7 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+//        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         /**
@@ -88,8 +88,10 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
 
         Text(
             text = "Food Intake Questionnaire",
-            fontSize = 48.sp,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(bottom = 8.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -97,12 +99,15 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
         Text(
             text = "Tick all the food categories you can eat",
             fontSize = 16.sp,
-            modifier = Modifier.padding(8.dp)
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
         )
 
         // Checkboxes with labels
         // Row for the first three checkboxes and labels
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Checkbox(checked = checked1, onCheckedChange = { checked1 = it })
             Text("Fruits")
             Checkbox(checked = checked2, onCheckedChange = { checked2 = it })
@@ -111,23 +116,49 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
             Text("Grains")
         }
         // Row for the second three checkboxes and labels
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = checked4, onCheckedChange = { checked4 = it })
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+
+                checked = checked4, onCheckedChange = { checked4 = it })
             Text("Red Meat")
-            Checkbox(checked = checked5, onCheckedChange = { checked5 = it })
+            Checkbox(
+                checked = checked5, onCheckedChange = { checked5 = it })
             Text("Seafood")
             Checkbox(checked = checked6, onCheckedChange = { checked6 = it })
-            Text("Q1: The Earth is Flat.")
+            Text("Poultry")
         }
         // Row for the last three checkboxes and labels
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = checked7, onCheckedChange = { checked7 = it })
-            Text("Q3: The speed of sound is 1,236 km/h.")
-            Checkbox(checked = checked8, onCheckedChange = { checked8 = it })
-            Text("Q1: The Earth is Flat.")
-            Checkbox(checked = checked9, onCheckedChange = { checked9 = it })
-            Text("Q1: The Earth is Flat.")
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = checked7, onCheckedChange = { checked7 = it })
+            Text("Fish")
+            Checkbox(
+                checked = checked8, onCheckedChange = { checked8 = it })
+            Text("Eggs")
+            Checkbox(
+                checked = checked9, onCheckedChange = { checked9 = it })
+            Text("Nuts/Seeds")
         }
+
+        Text(
+            text = "Your Persona",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        Text(
+            text = "People can be broadly classified into 6 different types based on their eating preferences. Click on each button below to find out the different types, and select the type that best fits you!",
+            fontSize = 12.sp,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
 
 
     }
+}
+
+
