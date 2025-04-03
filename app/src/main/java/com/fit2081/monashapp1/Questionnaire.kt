@@ -1,5 +1,8 @@
 package com.fit2081.monashapp1
 
+import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -58,7 +61,6 @@ class Questionnaire : ComponentActivity() {
 }
 
 
-//@Preview
 @OptIn(ExperimentalMaterial3Api::class) // to use dropdownmenu
 @Composable
 fun QuestionnaireContent(modifier: Modifier = Modifier) {
@@ -85,16 +87,21 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
         "Food Carefree"
     )
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("") }
+    var selectedPersona by remember { mutableStateOf("") }
+    // they are for timepickers
+    // when val is used with remember, .value has to be used to get the value
+    val mealTime = remember { mutableStateOf("") }
+    val sleepTime = remember { mutableStateOf("") }
+    val wakeTime = remember { mutableStateOf("") }
 
 
 // Column layout for the LoginscreenContent
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         /**
          * Text - Food Intake Questionnaire (biggest text)
@@ -118,8 +125,7 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
             text = "Food Intake Questionnaire",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
+            modifier = Modifier.padding(vertical = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -139,25 +145,21 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked1, onCheckedChange = { checked1 = it })
                 Text("Fruits")
             }
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked2, onCheckedChange = { checked2 = it })
                 Text(
-                    "Vegetables",
-                    fontSize = 14.sp
+                    "Vegetables", fontSize = 14.sp
                 )
             }
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked3, onCheckedChange = { checked3 = it })
                 Text("Grains")
@@ -170,22 +172,19 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked4, onCheckedChange = { checked4 = it })
                 Text("Red Meat")
             }
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked5, onCheckedChange = { checked5 = it })
                 Text("Seafood")
             }
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked6, onCheckedChange = { checked6 = it })
                 Text("Poultry")
@@ -198,22 +197,19 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked7, onCheckedChange = { checked7 = it })
                 Text("Fish")
             }
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked8, onCheckedChange = { checked8 = it })
                 Text("Eggs")
             }
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = checked9, onCheckedChange = { checked9 = it })
                 Text("Nuts/Seeds")
@@ -261,16 +257,13 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                         .padding(horizontal = 2.dp),
                     onClick = { showDialog = true }) {
                     Text(
-                        text = title,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
+                        text = title, fontWeight = FontWeight.Bold, fontSize = 13.sp
                     )
                 }
                 if (showDialog) {
                     Dialog(
                         //switch the visibility of the dialog to false when the user dismisses it
-                        onDismissRequest = { showDialog = false }
-                    ) {
+                        onDismissRequest = { showDialog = false }) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -279,8 +272,7 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                         ) {
                             // column layout inside the modal
                             Column(
-                                modifier = Modifier
-                                    .padding(16.dp),
+                                modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
                             ) {
@@ -331,7 +323,7 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             @Composable
@@ -355,16 +347,13 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                         .padding(horizontal = 2.dp),
                     onClick = { showDialog = true }) {
                     Text(
-                        text = title,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = buttonFontSize
+                        text = title, fontWeight = FontWeight.Bold, fontSize = buttonFontSize
                     )
                 }
                 if (showDialog) {
                     Dialog(
                         //switch the visibility of the dialog to false when the user dismisses it
-                        onDismissRequest = { showDialog = false }
-                    ) {
+                        onDismissRequest = { showDialog = false }) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -373,8 +362,7 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                         ) {
                             // column layout inside the modal
                             Column(
-                                modifier = Modifier
-                                    .padding(16.dp),
+                                modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
                             ) {
@@ -433,11 +421,9 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
         )
 
         ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
+            expanded = expanded, onExpandedChange = { expanded = !expanded }) {
             TextField(
-                value = selectedOption,
+                value = selectedPersona,
                 onValueChange = {},
                 readOnly = true,
                 label = { Text("Select your persona") },
@@ -450,19 +436,119 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                     .padding(bottom = 16.dp)
             )
             ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                personaList.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption) },
-                        onClick = {
-                            selectedOption = selectionOption
-                            expanded = false
-                        }
-                    )
+                expanded = expanded, onDismissRequest = { expanded = false }) {
+                personaList.forEach { item ->
+                    DropdownMenuItem(text = { Text(item) }, onClick = {
+                        selectedPersona = item
+                        expanded = false
+                    })
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            "What time do you do these activities",
+            fontSize = sectionTitleSize,
+            fontWeight = FontWeight.Bold
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Eat biggest meal: ${mealTime.value}", modifier = Modifier
+            )
+            Button(
+                modifier = Modifier.padding(horizontal = 4.dp), onClick = {
+                    TimePickerDialog(
+                        context, { _, hour: Int, minute: Int ->
+                            mealTime.value = String.format(
+                                "%02d:%02d", hour, minute
+                            ) // to format them like 04:25
+                        }, 12, 0, false
+                    ).show() // without show(), the dialog doesn't show up
+                }) {
+                Text("Select time")
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Go to bed: ${sleepTime.value}", modifier = Modifier
+            )
+            Button(
+                modifier = Modifier.padding(horizontal = 4.dp), onClick = {
+                    TimePickerDialog(
+                        context, { _, hour: Int, minute: Int ->
+                            sleepTime.value = String.format(
+                                "%02d:%02d", hour, minute
+                            ) // to format them like 04:25
+                        }, 12, 0, false
+                    ).show() // without show(), the dialog doesn't show up
+                }) {
+                Text("Select time")
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Wake up: ${wakeTime.value}", modifier = Modifier
+            )
+            Button(
+                modifier = Modifier.padding(horizontal = 4.dp), onClick = {
+                    TimePickerDialog(
+                        context, { _, hour: Int, minute: Int ->
+                            wakeTime.value = String.format(
+                                "%02d:%02d", hour, minute
+                            ) // to format them like 04:25
+                        }, 12, 0, false
+                    ).show() // without show(), the dialog doesn't show up
+                }) {
+                Text("Select time")
+            }
+        }
+
+        Spacer(Modifier.height(30.dp))
+
+        Button(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 8.dp),
+            onClick = {
+                // save values in shared preferences
+                val sharedPref =
+                    context.getSharedPreferences("questionnaire_sp", Context.MODE_PRIVATE).edit()
+                sharedPref.putBoolean("checked1", checked1)
+                sharedPref.putBoolean("checked2", checked2)
+                sharedPref.putBoolean("checked3", checked3)
+                sharedPref.putBoolean("checked4", checked4)
+                sharedPref.putBoolean("checked5", checked5)
+                sharedPref.putBoolean("checked6", checked6)
+                sharedPref.putBoolean("checked7", checked7)
+                sharedPref.putBoolean("checked8", checked8)
+                sharedPref.putBoolean("checked9", checked9)
+                sharedPref.putString("selectedPersona", selectedPersona)
+                sharedPref.putString("mealtime", mealTime.value)
+                sharedPref.putString("sleeptime", sleepTime.value)
+                sharedPref.putString("waketime", wakeTime.value)
+                sharedPref.apply()
+
+                // proceed to the home screen
+                context.startActivity(Intent(context, HomeScreen::class.java))
+            }) {
+            Text(
+                text = "Save Values and proceed", fontSize = 18.sp
+            )
         }
     }
 }
