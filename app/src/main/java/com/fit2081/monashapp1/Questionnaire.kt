@@ -543,6 +543,8 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                 sharedPref.putString("waketime", wakeTime.value)
                 sharedPref.apply()
 
+                // change the appstate to pass questionnaire in the future
+                AppState.isQuestionnaireDone = true
                 // proceed to the home screen
                 context.startActivity(Intent(context, HomeScreen::class.java))
             }) {
