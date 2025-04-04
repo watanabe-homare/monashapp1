@@ -342,7 +342,7 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                 // the dialog is hidden initially
                 Button(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1f) // to layout the buttons in a row nicely
                         .padding(horizontal = 2.dp),
                     onClick = { showDialog = true }) {
                     Text(

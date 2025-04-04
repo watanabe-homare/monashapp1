@@ -2,6 +2,7 @@ package com.fit2081.monashapp1
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_SEND
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -39,6 +41,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -54,16 +58,18 @@ class HomeScreen : ComponentActivity() {
         setContent {
             Monashapp1Theme {
                 val navController: NavHostController = rememberNavController()
+                // State to track the currently selected item in the bottom navigation bar.
+                var selectedItem by remember { mutableStateOf(0) }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        HomeBottomAppBar(navController)
+                        HomeBottomAppBar(navController, selectedItem) { selectedItem = it }
                     }
                 ) { innerPadding ->
                     // Use Column to place MyNavHost correctly within Scaffold.
                     Column(modifier = Modifier.padding(innerPadding)) {
                         // Calls the MyNavHost composable to define the navigation graph.
-                        HomeNavHost(innerPadding, navController)
+                        HomeNavHost(innerPadding, navController, selectedItem) { selectedItem = it }
                     }
                 }
             }
@@ -91,7 +97,10 @@ fun searchRowFromCsvById(context: Context, fileName: String, id: String): List<S
 
 
 @Composable
-fun HomeNavHost(innerPadding: PaddingValues, navController: NavHostController) {
+fun HomeNavHost(innerPadding: PaddingValues,
+                navController: NavHostController,
+                selectedItem: Int,
+                onSelectedItemChange:  (Int) -> Unit) {
     // values
     val context = LocalContext.current
     val foodScores = searchRowFromCsvById(context, "sample.csv", id = AppState.selectedId.value)
@@ -110,7 +119,13 @@ fun HomeNavHost(innerPadding: PaddingValues, navController: NavHostController) {
             ) // add Content to avoid using the same name as the class
         }
         composable("Insights") {
-            InsightsScreen(innerPadding)
+            InsightsScreen(
+                innerPadding,
+                context = context,
+                navController,
+                foodScores,
+                onSelectedItemChange
+            )
         }
         composable("NutriCoach") {
             NutriCoachScreen(innerPadding)
@@ -123,9 +138,9 @@ fun HomeNavHost(innerPadding: PaddingValues, navController: NavHostController) {
 }
 
 @Composable
-fun HomeBottomAppBar(navController: NavHostController) {
-    // State to track the currently selected item in the bottom navigation bar.
-    var selectedItem by remember { mutableStateOf(0) }
+fun HomeBottomAppBar(navController: NavHostController,
+                     selectedItem: Int,
+                     onItemSelected: (Int) -> Unit) {
     // List of navigation items.
     val items = listOf(
         "Home",
@@ -162,7 +177,7 @@ fun HomeBottomAppBar(navController: NavHostController) {
                 // Actions to perform when this item is clicked.
                 onClick = {
                     // Update the selectedItem state to the current index.
-                    selectedItem = index
+                    onItemSelected(index)
                     // Navigate to the corresponding screen based on the item's name.
                     navController.navigate(item)
 
@@ -184,7 +199,7 @@ fun HomeScreenContent(
     // value/variables
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(8.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
@@ -281,9 +296,156 @@ fun HomeScreenContent(
     }
 }
 
+// this function is for InsightsScreeen
 @Composable
-fun InsightsScreen(innerPadding: PaddingValues) {
+fun CategoryRow(category: String, categoryIndex: Int, maxscore: Int = 10){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        val context = LocalContext.current
+        val foodScores = searchRowFromCsvById(context, "sample.csv", id = AppState.selectedId.value)
+        val categoryScore = if (foodScores[2] == "Male"){foodScores[categoryIndex]} else{foodScores[categoryIndex + 1]}
 
+        Text(category,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .weight(4.2f)
+                .padding(horizontal = 4.dp))
+
+        LinearProgressIndicator(
+            progress = { (categoryScore.toFloat()) / (maxscore).toFloat() },
+            modifier = Modifier
+                .weight(4f)
+                .padding(horizontal = 2.dp)
+        )
+
+        Text(
+            "${categoryScore}/${maxscore}",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .weight(1.8f)
+                .padding(horizontal = 2.dp)
+        )
+    }
+}
+
+@Composable
+fun InsightsScreen(
+    innerPadding: PaddingValues = PaddingValues(),
+    context: Context = LocalContext.current,
+    navController: NavHostController,
+    foodscores: List<String> = emptyList(),
+    onSelectedItemChange: (Int) -> Unit
+                   ) {
+    // value/variables
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(8.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        /**
+         * Text - "Insights: Food Score"
+         * 13 Rows
+         *      text - category name
+         *      progress bar
+         *      (text - score/10)
+         * Space
+         * Text - "Total Food Quality Score"
+         * progress bar
+         * space
+         * Row
+         *      Button - Share with someone
+         *      Button - Improve my diet, navigate to NutriCoach
+         */
+
+        val totalFoodScore = if (foodscores[2] == "Male"){foodscores[3]} else{foodscores[4]}
+
+        Text(
+            "Insights: Food Scores",
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp)
+        )
+
+        CategoryRow("Vegetables", 8,10)
+        CategoryRow("Fruits", 19)
+        CategoryRow("Grain & Cereals", 29)
+        CategoryRow("Whole Grains", 33)
+        CategoryRow("Meat & Alternatives", 36)
+        CategoryRow("Dairy & Alternatives", 40)
+        CategoryRow("Sodium", 43)
+        CategoryRow("Alcohol", 46, 5)
+        CategoryRow("Water", 49, 5)
+        CategoryRow("Sugar", 54)
+        CategoryRow("Saturated Fat", 57, 5)
+        CategoryRow("Unsatuated Fat", 60, 5)
+        CategoryRow("Discretionary Foods", 5)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            "Total Food Quality Score",
+            fontWeight = FontWeight.Bold
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            LinearProgressIndicator(
+                progress = { (totalFoodScore.toFloat()) / 100f },
+                modifier = Modifier
+                    .weight(3.5f)
+                    .padding(horizontal = 8.dp)
+            )
+
+            Text(
+                "${totalFoodScore}/100",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .weight(1.5f)
+                    .padding(horizontal = 8.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            // Create a Button to trigger the sharing action
+            //When clicked, the shareIntent will be started to share the text
+            Button(
+                modifier = Modifier
+                    .weight(1f),
+                onClick = {
+                //create a intent to share the text
+                val shareIntent = Intent(ACTION_SEND)
+                //set the type of data to share
+                shareIntent.type = "text/plain"
+                //set the data to share, in this case, the text
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "My Total Food Score is ${totalFoodScore}")
+                //start the activity to share the text, with a chooser to select the app
+                startActivity(context, Intent.createChooser(shareIntent, "share your score via"), null)
+            }) {
+                Text("Share")
+            }
+            Button(
+                modifier = Modifier
+                    .weight(1f),
+                onClick = {
+                    navController.navigate("NutriCoach")
+                    onSelectedItemChange(2) // index for NutriCoach
+                }) {
+                Text("Improve my diet!")
+            }
+        }
+    }
 }
 
 @Composable
