@@ -1,5 +1,7 @@
 package com.fit2081.monashapp1
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,13 +9,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,11 +34,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fit2081.monashapp1.ui.theme.Monashapp1Theme
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class HomeScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +72,29 @@ class HomeScreen : ComponentActivity() {
 }
 
 
+fun searchRowFromCsvById(context: Context, fileName: String, id: String): List<String> {
+    val inputStream = context.assets.open(fileName)
+    val reader = BufferedReader(InputStreamReader(inputStream))
+
+    reader.useLines { lines ->
+        lines.drop(1).forEach { line ->
+            val row = line.split(",")
+            // if the id of the row matches the id given
+            if (row[1] == id) {
+                return row
+            }
+        }
+    }
+    // if there's no matching id, raise an exception
+    throw NoSuchElementException("No row found with ID: $id")
+}
+
+
 @Composable
 fun HomeNavHost(innerPadding: PaddingValues, navController: NavHostController) {
+    // values
+    val context = LocalContext.current
+    val foodScores = searchRowFromCsvById(context, "sample.csv", id = AppState.selectedId.value)
     // NavHost composable to define the navigation graph
     NavHost(
         // Use the provided NavHostController
@@ -67,7 +103,11 @@ fun HomeNavHost(innerPadding: PaddingValues, navController: NavHostController) {
         startDestination = "home"
     ) {
         composable("Home") {
-            HomeScreenContent(innerPadding) // add Content to avoid using the same name as the class
+            HomeScreenContent(
+                innerPadding,
+                context = context,
+                foodScores
+            ) // add Content to avoid using the same name as the class
         }
         composable("Insights") {
             InsightsScreen(innerPadding)
@@ -133,13 +173,21 @@ fun HomeBottomAppBar(navController: NavHostController) {
     }
 }
 
+//@Preview(showBackground = true)
 @Composable
-fun HomeScreenContent(innerPadding: PaddingValues){
-    Column (
+// default paddingvalues()　is to use preview
+fun HomeScreenContent(
+    innerPadding: PaddingValues = PaddingValues(),
+    context: Context = LocalContext.current,
+    foodscores: List<String> = emptyList()
+) {
+    // value/variables
+
+    Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
-        ){
+    ) {
         /**
          * Text - "Hello, [User's ID]"
          * Row
@@ -148,25 +196,102 @@ fun HomeScreenContent(innerPadding: PaddingValues){
          * (image)
          * Row
          *      text - "Your Food Quality score"
-         *      score display from shared preferences
+         *      score display from csv file
          * Space
          * Text - "What is the Food Quality Score?"
          * Explanation text: What the Food Quality Score represents
          */
+
+        Text(
+            text = "Hello, ${AppState.selectedId.value}",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "You can change your questionnaire here",
+                modifier = Modifier
+            )
+            Button(
+                modifier = Modifier.padding(horizontal = 4.dp),
+                onClick = {
+                    context.startActivity(Intent(context, Questionnaire::class.java))
+                }) {
+                Text("Edit")
+            }
+        }
+
+        // Add image
+        androidx.compose.foundation.Image(
+            painter = painterResource(id = R.drawable.image_for_home_screen),
+            contentDescription = "Food Image",
+            modifier = Modifier
+                .size(300.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Your Food Quality score",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+            )
+            if (foodscores[2] == "Male") {
+                Text(
+                    "${foodscores[3]}/100",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Blue,
+                    modifier = Modifier
+                )
+            } else {
+                Text(
+                    "${foodscores[4]}/100",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Blue,
+                    modifier = Modifier
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(
+            "What is the Food Quality Score?",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        Text(
+            "Your Food Quality Score provides a snapshot of how well your eating patterns align with established food guidelines, helping you identify both strengths and opportunities for improvement in your diet.",
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        Text(
+            "This personalized measurement considers various food groups including vegetables, fruits, whole grains, and proteins to give you practical insights for making healthier food choices.",
+        )
+
     }
 }
 
 @Composable
-fun InsightsScreen(innerPadding: PaddingValues){
+fun InsightsScreen(innerPadding: PaddingValues) {
 
 }
 
 @Composable
-fun NutriCoachScreen(innerPadding: PaddingValues){
+fun NutriCoachScreen(innerPadding: PaddingValues) {
 
 }
 
 @Composable
-fun SettingsScreen(innerPadding: PaddingValues){
+fun SettingsScreen(innerPadding: PaddingValues) {
 
 }

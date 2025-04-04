@@ -35,14 +35,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fit2081.monashapp1.AppState.selectedId
 import com.fit2081.monashapp1.ui.theme.Monashapp1Theme
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-// this is to check if questionnaire is done or not
+// these are tha global values which can be used in other activities
 // modify it using sharedpreferences in the future
 object AppState {
     var isQuestionnaireDone: Boolean = false
+    var selectedId = mutableStateOf("") // initialise it with blank space
+    // if you don't use by remember, you have to use .value to access its value
 }
 
 
@@ -95,17 +98,19 @@ fun isNumberValid(phoneNumber: String, validList: List<String>): Boolean {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownFromCSV(context: Context, fileName: String, columnIndex: Int) {
+fun DropdownFromCSVForID(context: Context, fileName: String, columnIndex: Int) {
     val options = getColumnFromCSV(context, fileName, columnIndex)
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(options[0]) }
+
+    // set selected id as the id of first row of csv
+    selectedId.value = options[0]
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
-            value = selectedOption,
+            value = selectedId.value,
             onValueChange = {},
             readOnly = true,
             label = { Text("Select your ID") },
@@ -124,7 +129,7 @@ fun DropdownFromCSV(context: Context, fileName: String, columnIndex: Int) {
                 DropdownMenuItem(
                     text = { Text(selectionOption) },
                     onClick = {
-                        selectedOption = selectionOption
+                        selectedId.value = selectionOption
                         expanded = false
                     }
                 )
@@ -137,7 +142,7 @@ fun DropdownFromCSV(context: Context, fileName: String, columnIndex: Int) {
 fun LoginscreenContent(modifier: Modifier = Modifier) {
 //    values
     val context = LocalContext.current
-//    var phoneNumber by remember { mutableStateOf("") }
+    //    var phoneNumber by remember { mutableStateOf("") }
     val phoneNumber = "61436567330"
     val validPhoneNumberList = getColumnFromCSV(context, "sample.csv", 0)
 
@@ -168,7 +173,7 @@ fun LoginscreenContent(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        DropdownFromCSV(context, "sample.csv", 1)
+        DropdownFromCSVForID(context, "sample.csv", 1)
 
 //        // Text field for entering the location.
 //        TextField(
