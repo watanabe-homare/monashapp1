@@ -97,10 +97,12 @@ fun searchRowFromCsvById(context: Context, fileName: String, id: String): List<S
 
 
 @Composable
-fun HomeNavHost(innerPadding: PaddingValues,
-                navController: NavHostController,
-                selectedItem: Int,
-                onSelectedItemChange:  (Int) -> Unit) {
+fun HomeNavHost(
+    innerPadding: PaddingValues,
+    navController: NavHostController,
+    selectedItem: Int,
+    onSelectedItemChange: (Int) -> Unit
+) {
     // values
     val context = LocalContext.current
     val foodScores = searchRowFromCsvById(context, "sample.csv", id = AppState.selectedId.value)
@@ -138,9 +140,11 @@ fun HomeNavHost(innerPadding: PaddingValues,
 }
 
 @Composable
-fun HomeBottomAppBar(navController: NavHostController,
-                     selectedItem: Int,
-                     onItemSelected: (Int) -> Unit) {
+fun HomeBottomAppBar(
+    navController: NavHostController,
+    selectedItem: Int,
+    onItemSelected: (Int) -> Unit
+) {
     // List of navigation items.
     val items = listOf(
         "Home",
@@ -199,7 +203,9 @@ fun HomeScreenContent(
     // value/variables
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(8.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
@@ -298,21 +304,27 @@ fun HomeScreenContent(
 
 // this function is for InsightsScreeen
 @Composable
-fun CategoryRow(category: String, categoryIndex: Int, maxscore: Int = 10){
+fun CategoryRow(category: String, categoryIndex: Int, maxscore: Int = 10) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         val context = LocalContext.current
         val foodScores = searchRowFromCsvById(context, "sample.csv", id = AppState.selectedId.value)
-        val categoryScore = if (foodScores[2] == "Male"){foodScores[categoryIndex]} else{foodScores[categoryIndex + 1]}
+        val categoryScore = if (foodScores[2] == "Male") {
+            foodScores[categoryIndex]
+        } else {
+            foodScores[categoryIndex + 1]
+        }
 
-        Text(category,
+        Text(
+            category,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .weight(4.2f)
-                .padding(horizontal = 4.dp))
+                .padding(horizontal = 4.dp)
+        )
 
         LinearProgressIndicator(
             progress = { (categoryScore.toFloat()) / (maxscore).toFloat() },
@@ -338,11 +350,13 @@ fun InsightsScreen(
     navController: NavHostController,
     foodscores: List<String> = emptyList(),
     onSelectedItemChange: (Int) -> Unit
-                   ) {
+) {
     // value/variables
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(8.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -361,19 +375,25 @@ fun InsightsScreen(
          *      Button - Improve my diet, navigate to NutriCoach
          */
 
-        val totalFoodScore = if (foodscores[2] == "Male"){foodscores[3]} else{foodscores[4]}
+        val totalFoodScore = if (foodscores[2] == "Male") {
+            foodscores[3]
+        } else {
+            foodscores[4]
+        }
 
         Text(
             "Insights: Food Scores",
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(8.dp)
         )
 
-        CategoryRow("Vegetables", 8,5)
-        CategoryRow("Fruits", 19,10)
-        CategoryRow("Grain & Cereals", 29,5)
-        CategoryRow("Whole Grains", 33,5)
+        CategoryRow("Vegetables", 8, 5)
+        CategoryRow("Fruits", 19, 10)
+        CategoryRow("Grain & Cereals", 29, 5)
+        CategoryRow("Whole Grains", 33, 5)
         CategoryRow("Meat & Alternatives", 36)
         CategoryRow("Dairy & Alternatives", 40)
         CategoryRow("Sodium", 43)
@@ -394,7 +414,7 @@ fun InsightsScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             LinearProgressIndicator(
                 progress = { (totalFoodScore.toFloat()) / 100f },
                 modifier = Modifier
@@ -417,22 +437,29 @@ fun InsightsScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             // Create a Button to trigger the sharing action
             //When clicked, the shareIntent will be started to share the text
             Button(
                 modifier = Modifier
                     .weight(1f),
                 onClick = {
-                //create a intent to share the text
-                val shareIntent = Intent(ACTION_SEND)
-                //set the type of data to share
-                shareIntent.type = "text/plain"
-                //set the data to share, in this case, the text
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "My Total Food Score is ${totalFoodScore}")
-                //start the activity to share the text, with a chooser to select the app
-                startActivity(context, Intent.createChooser(shareIntent, "share your score via"), null)
-            }) {
+                    //create a intent to share the text
+                    val shareIntent = Intent(ACTION_SEND)
+                    //set the type of data to share
+                    shareIntent.type = "text/plain"
+                    //set the data to share, in this case, the text
+                    shareIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        "My Total Food Score is ${totalFoodScore}"
+                    )
+                    //start the activity to share the text, with a chooser to select the app
+                    startActivity(
+                        context,
+                        Intent.createChooser(shareIntent, "share your score via"),
+                        null
+                    )
+                }) {
                 Text("Share")
             }
             Button(

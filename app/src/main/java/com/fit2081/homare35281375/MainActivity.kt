@@ -57,15 +57,25 @@ fun WelcomeScreeen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     val annotatedText = buildAnnotatedString {
-        pushStringAnnotation(tag = "URL", annotation = "https://www.monash.edu/medicine/scs/nutrition/clinics/nutrition")
-        withStyle(style = SpanStyle(color = Color.Blue, textDecoration = TextDecoration.Underline)) {
+        pushStringAnnotation(
+            tag = "URL",
+            annotation = "https://www.monash.edu/medicine/scs/nutrition/clinics/nutrition"
+        )
+        withStyle(
+            style = SpanStyle(
+                color = Color.Blue,
+                textDecoration = TextDecoration.Underline
+            )
+        ) {
             append("The Clinic Website Here")
         }
         pop()
     }
 //    Column layout for the welcome screen
     Column(
-        modifier = modifier.fillMaxSize().padding(16.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

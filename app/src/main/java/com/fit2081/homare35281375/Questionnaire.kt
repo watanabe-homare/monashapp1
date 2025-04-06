@@ -1,7 +1,6 @@
 package com.fit2081.homare35281375
 
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -67,18 +66,18 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
     //    values
     val context = LocalContext.current
     val sectionTitleSize = 16.sp
-
-    val sharedPrefLoad = context.getSharedPreferences("questionnaire_sp", Context.MODE_PRIVATE)
+    // get the user's sharedpreference
+    val sharedPrefLoad = AppState.sharedPrefLoad
     // Mutable state variables to track checkbox states
-    var checked1 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked1", false)) }
-    var checked2 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked2", false)) }
-    var checked3 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked3", false)) }
-    var checked4 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked4", false)) }
-    var checked5 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked5", false)) }
-    var checked6 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked6", false)) }
-    var checked7 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked7", false)) }
-    var checked8 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked8", false)) }
-    var checked9 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked9", false)) }
+    var checked1 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked1", false)) }
+    var checked2 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked2", false)) }
+    var checked3 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked3", false)) }
+    var checked4 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked4", false)) }
+    var checked5 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked5", false)) }
+    var checked6 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked6", false)) }
+    var checked7 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked7", false)) }
+    var checked8 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked8", false)) }
+    var checked9 by remember { mutableStateOf(sharedPrefLoad.getBoolean("checked9", false)) }
     // they are for dropdown menu
     val personaList = listOf(
         "Health Devotee",
@@ -90,7 +89,11 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
     )
     var expanded by remember { mutableStateOf(false) }
     // A ?: B returns if A is not null, A otherwise(if A is null), B
-    var selectedPersona by remember { mutableStateOf(sharedPrefLoad.getString("selectedPersona", "") ?: "") }
+    var selectedPersona by remember {
+        mutableStateOf(
+            sharedPrefLoad.getString("selectedPersona", "") ?: ""
+        )
+    }
     // they are for timepickers
     // when val is used with remember, .value has to be used to get the value
     val mealTime = remember { mutableStateOf(sharedPrefLoad.getString("mealtime", "") ?: "") }
@@ -533,32 +536,33 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                     mealTime.value == "" ||
                     sleepTime.value == "" ||
                     wakeTime.value == ""
-                ){
+                ) {
                     // if the user has not selected a persona and timings
-                    Toast.makeText(context, "select a persona and timings", Toast.LENGTH_LONG).show()
-                }
-                else{
-                // after checking the user has selected a persona and timings
-                // save values in shared preferences
-                val sharedPrefEdit = sharedPrefLoad.edit()
-                sharedPrefEdit.putBoolean("checked1", checked1)
-                sharedPrefEdit.putBoolean("checked2", checked2)
-                sharedPrefEdit.putBoolean("checked3", checked3)
-                sharedPrefEdit.putBoolean("checked4", checked4)
-                sharedPrefEdit.putBoolean("checked5", checked5)
-                sharedPrefEdit.putBoolean("checked6", checked6)
-                sharedPrefEdit.putBoolean("checked7", checked7)
-                sharedPrefEdit.putBoolean("checked8", checked8)
-                sharedPrefEdit.putBoolean("checked9", checked9)
-                sharedPrefEdit.putString("selectedPersona", selectedPersona)
-                sharedPrefEdit.putString("mealtime", mealTime.value)
-                sharedPrefEdit.putString("sleeptime", sleepTime.value)
-                sharedPrefEdit.putString("waketime", wakeTime.value)
-                sharedPrefEdit.apply()
+                    Toast.makeText(context, "select a persona and timings", Toast.LENGTH_LONG)
+                        .show()
+                } else {
+                    // after checking the user has selected a persona and timings
+                    // save values in shared preferences
+                    val sharedPrefEdit = sharedPrefLoad.edit()
+                    sharedPrefEdit.putBoolean("checked1", checked1)
+                    sharedPrefEdit.putBoolean("checked2", checked2)
+                    sharedPrefEdit.putBoolean("checked3", checked3)
+                    sharedPrefEdit.putBoolean("checked4", checked4)
+                    sharedPrefEdit.putBoolean("checked5", checked5)
+                    sharedPrefEdit.putBoolean("checked6", checked6)
+                    sharedPrefEdit.putBoolean("checked7", checked7)
+                    sharedPrefEdit.putBoolean("checked8", checked8)
+                    sharedPrefEdit.putBoolean("checked9", checked9)
+                    sharedPrefEdit.putString("selectedPersona", selectedPersona)
+                    sharedPrefEdit.putString("mealtime", mealTime.value)
+                    sharedPrefEdit.putString("sleeptime", sleepTime.value)
+                    sharedPrefEdit.putString("waketime", wakeTime.value)
+                    sharedPrefEdit.apply()
 
-                // proceed to the home screen
-                context.startActivity(Intent(context, HomeScreen::class.java))
-            }}) {
+                    // proceed to the home screen
+                    context.startActivity(Intent(context, HomeScreen::class.java))
+                }
+            }) {
             Text(
                 text = "Save Values and proceed", fontSize = 18.sp
             )
