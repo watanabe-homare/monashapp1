@@ -4,6 +4,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -524,9 +525,19 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 8.dp),
             onClick = {
+                if (
+                    selectedPersona == "" ||
+                    mealTime.value == "" ||
+                    sleepTime.value == "" ||
+                    wakeTime.value == ""
+                ){
+                    // if the user has not selected a persona and timings
+                    Toast.makeText(context, "select a persona and timings", Toast.LENGTH_LONG).show()
+                }
+                else{
+                // after checking the user has selected a persona and timings
                 // save values in shared preferences
-                val sharedPref =
-                    context.getSharedPreferences("questionnaire_sp", Context.MODE_PRIVATE).edit()
+                val sharedPref = context.getSharedPreferences("questionnaire_sp", Context.MODE_PRIVATE).edit()
                 sharedPref.putBoolean("checked1", checked1)
                 sharedPref.putBoolean("checked2", checked2)
                 sharedPref.putBoolean("checked3", checked3)
@@ -542,11 +553,9 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                 sharedPref.putString("waketime", wakeTime.value)
                 sharedPref.apply()
 
-                // change the appstate to pass questionnaire in the future
-                AppState.isQuestionnaireDone = true
                 // proceed to the home screen
                 context.startActivity(Intent(context, HomeScreen::class.java))
-            }) {
+            }}) {
             Text(
                 text = "Save Values and proceed", fontSize = 18.sp
             )

@@ -41,9 +41,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 // these are tha global values which can be used in other activities
-// modify it using sharedpreferences in the future
 object AppState {
-    var isQuestionnaireDone: Boolean = false
     var selectedId = mutableStateOf("") // initialise it with blank space
     // if you don't use by remember, you have to use .value to access its value
 }
@@ -201,16 +199,8 @@ fun LoginscreenContent(modifier: Modifier = Modifier) {
                 if(isNumberValid(phoneNumber, validPhoneNumberList)){
                     // if correct show a toast message and navigate to the questionnaire
                     Toast.makeText(context, "Login Successful", Toast.LENGTH_LONG).show()
-
-                    // if questionnaire is not done, navigate to questionnaire
-                    if(!AppState.isQuestionnaireDone) {
-                        context.startActivity(Intent(context, Questionnaire::class.java))
+                    context.startActivity(Intent(context, Questionnaire::class.java))
                     }
-                    // if it's done, navigate to the home screen
-                    else{
-                        context.startActivity(Intent(context, HomeScreen::class.java))
-                    }
-                }
                 else{
                     // if incorrect show a toast message saying phone number invalid
                     Toast.makeText(context, "Phone number invalid", Toast.LENGTH_LONG).show()
