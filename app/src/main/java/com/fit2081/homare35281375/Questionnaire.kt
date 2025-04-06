@@ -67,16 +67,18 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
     //    values
     val context = LocalContext.current
     val sectionTitleSize = 16.sp
+
+    val sharedPrefLoad = context.getSharedPreferences("questionnaire_sp", Context.MODE_PRIVATE)
     // Mutable state variables to track checkbox states
-    var checked1 by remember { mutableStateOf(false) }
-    var checked2 by remember { mutableStateOf(false) }
-    var checked3 by remember { mutableStateOf(false) }
-    var checked4 by remember { mutableStateOf(false) }
-    var checked5 by remember { mutableStateOf(false) }
-    var checked6 by remember { mutableStateOf(false) }
-    var checked7 by remember { mutableStateOf(false) }
-    var checked8 by remember { mutableStateOf(false) }
-    var checked9 by remember { mutableStateOf(false) }
+    var checked1 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked1", false)) }
+    var checked2 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked2", false)) }
+    var checked3 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked3", false)) }
+    var checked4 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked4", false)) }
+    var checked5 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked5", false)) }
+    var checked6 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked6", false)) }
+    var checked7 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked7", false)) }
+    var checked8 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked8", false)) }
+    var checked9 by remember { mutableStateOf( sharedPrefLoad.getBoolean("checked9", false)) }
     // they are for dropdown menu
     val personaList = listOf(
         "Health Devotee",
@@ -87,12 +89,13 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
         "Food Carefree"
     )
     var expanded by remember { mutableStateOf(false) }
-    var selectedPersona by remember { mutableStateOf("") }
+    // A ?: B returns if A is not null, A otherwise(if A is null), B
+    var selectedPersona by remember { mutableStateOf(sharedPrefLoad.getString("selectedPersona", "") ?: "") }
     // they are for timepickers
     // when val is used with remember, .value has to be used to get the value
-    val mealTime = remember { mutableStateOf("") }
-    val sleepTime = remember { mutableStateOf("") }
-    val wakeTime = remember { mutableStateOf("") }
+    val mealTime = remember { mutableStateOf(sharedPrefLoad.getString("mealtime", "") ?: "") }
+    val sleepTime = remember { mutableStateOf(sharedPrefLoad.getString("sleeptime", "") ?: "") }
+    val wakeTime = remember { mutableStateOf(sharedPrefLoad.getString("waketime", "") ?: "") }
 
 
 // Column layout for the LoginscreenContent
@@ -537,21 +540,21 @@ fun QuestionnaireContent(modifier: Modifier = Modifier) {
                 else{
                 // after checking the user has selected a persona and timings
                 // save values in shared preferences
-                val sharedPref = context.getSharedPreferences("questionnaire_sp", Context.MODE_PRIVATE).edit()
-                sharedPref.putBoolean("checked1", checked1)
-                sharedPref.putBoolean("checked2", checked2)
-                sharedPref.putBoolean("checked3", checked3)
-                sharedPref.putBoolean("checked4", checked4)
-                sharedPref.putBoolean("checked5", checked5)
-                sharedPref.putBoolean("checked6", checked6)
-                sharedPref.putBoolean("checked7", checked7)
-                sharedPref.putBoolean("checked8", checked8)
-                sharedPref.putBoolean("checked9", checked9)
-                sharedPref.putString("selectedPersona", selectedPersona)
-                sharedPref.putString("mealtime", mealTime.value)
-                sharedPref.putString("sleeptime", sleepTime.value)
-                sharedPref.putString("waketime", wakeTime.value)
-                sharedPref.apply()
+                val sharedPrefEdit = sharedPrefLoad.edit()
+                sharedPrefEdit.putBoolean("checked1", checked1)
+                sharedPrefEdit.putBoolean("checked2", checked2)
+                sharedPrefEdit.putBoolean("checked3", checked3)
+                sharedPrefEdit.putBoolean("checked4", checked4)
+                sharedPrefEdit.putBoolean("checked5", checked5)
+                sharedPrefEdit.putBoolean("checked6", checked6)
+                sharedPrefEdit.putBoolean("checked7", checked7)
+                sharedPrefEdit.putBoolean("checked8", checked8)
+                sharedPrefEdit.putBoolean("checked9", checked9)
+                sharedPrefEdit.putString("selectedPersona", selectedPersona)
+                sharedPrefEdit.putString("mealtime", mealTime.value)
+                sharedPrefEdit.putString("sleeptime", sleepTime.value)
+                sharedPrefEdit.putString("waketime", wakeTime.value)
+                sharedPrefEdit.apply()
 
                 // proceed to the home screen
                 context.startActivity(Intent(context, HomeScreen::class.java))
