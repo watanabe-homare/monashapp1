@@ -1,8 +1,7 @@
-package com.fit2081.monashapp1
+package com.fit2081.homare35281375
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).

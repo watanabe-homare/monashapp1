@@ -1,4 +1,4 @@
-package com.fit2081.monashapp1.ui.theme
+package com.fit2081.homare35281375.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

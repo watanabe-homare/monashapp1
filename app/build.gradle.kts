@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.fit2081.monashapp1"
+    namespace = "com.fit2081.homare35281375"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.fit2081.monashapp1"
+        applicationId = "com.fit2081.homare35281375"
         minSdk = 35
         targetSdk = 35
         versionCode = 1

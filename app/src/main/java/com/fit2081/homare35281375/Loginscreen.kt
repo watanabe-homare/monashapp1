@@ -1,4 +1,4 @@
-package com.fit2081.monashapp1
+package com.fit2081.homare35281375
 
 //For smooth navigation set phoneNumber val should be modified after
 
@@ -35,8 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fit2081.monashapp1.AppState.selectedId
-import com.fit2081.monashapp1.ui.theme.Monashapp1Theme
+import com.fit2081.homare35281375.AppState.selectedId
+import com.fit2081.homare35281375.ui.theme.Monashapp1Theme
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

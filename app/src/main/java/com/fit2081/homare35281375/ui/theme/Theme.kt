@@ -1,6 +1,5 @@
-package com.fit2081.monashapp1.ui.theme
+package com.fit2081.homare35281375.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

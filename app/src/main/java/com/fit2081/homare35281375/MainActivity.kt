@@ -1,6 +1,6 @@
 // This activity is for welcome screen
 
-package com.fit2081.monashapp1
+package com.fit2081.homare35281375
 
 import android.content.Intent
 import android.net.Uri
@@ -32,7 +32,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fit2081.monashapp1.ui.theme.Monashapp1Theme
+import com.fit2081.homare35281375.ui.theme.Monashapp1Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

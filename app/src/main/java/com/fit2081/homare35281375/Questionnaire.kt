@@ -1,4 +1,4 @@
-package com.fit2081.monashapp1
+package com.fit2081.homare35281375
 
 import android.app.TimePickerDialog
 import android.content.Context
@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.fit2081.monashapp1.ui.theme.Monashapp1Theme
+import com.fit2081.homare35281375.ui.theme.Monashapp1Theme
 
 class Questionnaire : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
