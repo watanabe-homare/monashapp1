@@ -370,10 +370,10 @@ fun InsightsScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp)
         )
 
-        CategoryRow("Vegetables", 8,10)
-        CategoryRow("Fruits", 19)
-        CategoryRow("Grain & Cereals", 29)
-        CategoryRow("Whole Grains", 33)
+        CategoryRow("Vegetables", 8,5)
+        CategoryRow("Fruits", 19,10)
+        CategoryRow("Grain & Cereals", 29,5)
+        CategoryRow("Whole Grains", 33,5)
         CategoryRow("Meat & Alternatives", 36)
         CategoryRow("Dairy & Alternatives", 40)
         CategoryRow("Sodium", 43)
@@ -382,7 +382,7 @@ fun InsightsScreen(
         CategoryRow("Sugar", 54)
         CategoryRow("Saturated Fat", 57, 5)
         CategoryRow("Unsatuated Fat", 60, 5)
-        CategoryRow("Discretionary Foods", 5)
+        CategoryRow("Discretionary Foods", 10)
 
         Spacer(modifier = Modifier.height(24.dp))
 
